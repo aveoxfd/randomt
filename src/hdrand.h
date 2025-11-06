@@ -29,10 +29,8 @@ class HardwareRandom{
     HardwareRandom(void);
     //HardwareRandom(unsigned char method);
 
-    #if (!(0x08) && !(0x016))
     unsigned long long random64(void);
     unsigned long random32(void);
-    #endif
     DEFAULT_MODE random(void);
 
     private:

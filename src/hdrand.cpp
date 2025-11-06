@@ -54,7 +54,6 @@ random_method(
     #endif
 };
 
-#if (!(0x08) && !(0x16))
 template <typename T>
 uint64 HardwareRandom<T>::random64(void){
     seed = (random_method() * seed * 242353483725792147621796315248697241650ULL + 1LL) % 43583578946312482376987392659358379256ULL;
@@ -66,7 +65,6 @@ uint32 HardwareRandom<T>::random32(void){
     seed = (random_method() * seed * 242353483725792147621796315248697241650UL + 1LL) % 43583578946312482376987392659358379256UL;
     return seed;
 }
-#endif
 
 template <typename T>
 DEFAULT_MODE HardwareRandom<T>::random(void){
