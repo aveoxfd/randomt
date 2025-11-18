@@ -9,9 +9,14 @@ typedef unsigned long       uint32;
 typedef unsigned short      uint16;
 typedef unsigned char       uint8;
 
+typedef long long           sint64;
+typedef long                sint32;
+typedef short               sint16;
+typedef char                sint8;
+
 extern "C"{
-    uint32 __get_hardrand_rdrand(void);
-    uint32 __get_hardrand_rdseed(void);
+    int __get_hardrand_rdrand(void);
+    int __get_hardrand_rdseed(void);
 }
 
 #if (LANG == CPPLANG)
@@ -32,6 +37,12 @@ template class HardwareRandom<uint64>;
 template class HardwareRandom<uint32>;
 template class HardwareRandom<uint16>;
 template class HardwareRandom<uint8>;
+
+template class HardwareRandom<sint64>;
+template class HardwareRandom<sint32>;
+template class HardwareRandom<sint16>;
+template class HardwareRandom<sint8>;
+template class HardwareRandom<int>;
 
 template <typename T>
 HardwareRandom<T>::HardwareRandom(T seed) : seed(seed), random_method(DEFAULT_RANDOM_METHOD) {
@@ -59,34 +70,27 @@ random_method(
 Generates a random 64-bit unsigned integer.
 */
 template <typename T>
-uint64 HardwareRandom<T>::random64(void){
+T HardwareRandom<T>::random64(void){
     seed = (random_method() * seed * 2423534837ULL + 1ULL) % 4358357894ULL;
-    return (uint64)seed;
+    return (T) seed;
 }
 /*
 Generates a random 32-bit unsigned integer.
 */
 template <typename T>
-uint32 HardwareRandom<T>::random32(void){
-    seed = (random_method() * seed * 2423534837UL + 1UL) % 4358357894UL;
-    return (uint32)seed;
+T HardwareRandom<T>::random32(void){
+    seed = (random_method() * seed * 2423534837ULL + 1ULL) % 4358357894ULL;
+    return (T)seed;
 }
+
 /*
-Generates a random number of type DEFAULT_MODE.
+Generates a random number of type T.
 */
 template <typename T>
-DEFAULT_MODE HardwareRandom<T>::random(void){
+T HardwareRandom<T>::random(void){
     CHECK_SUPPORT
-    if constexpr (std::is_same<T, uint64>::value){
-        return random64();
-    }
-    else if constexpr (std::is_same<T, uint32>::value){
-        return random32();
-    }
-    else{
-        seed = (random_method() * seed * 2423534837UL + 1UL) % 4358357894UL;
-        return (DEFAULT_MODE)seed;
-    }
+    seed = (random_method() * seed * 2423534837ULL + 1ULL) % 4358357894ULL;
+    return (T)seed;
 }
 /*
 Updates the seed using hardware random method.
@@ -104,7 +108,9 @@ void HardwareRandom<T>::update_seed(void){
     seed+=random_method()*time(0);
 }
 #endif
-
+/*
+Generates a random number using hardware random method in C language style.
+*/
 #if (LANG == CLANG)
 
 DEFAULT_MODE seed = 0;

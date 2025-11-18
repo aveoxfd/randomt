@@ -3,12 +3,12 @@
 
 #define RDRAND_METHOD (unsigned char)0x00
 #define RDSEED_METHOD (unsigned char)0x01
-#define NOSEED 0
-#define DEBUG 0
+#define NOSEED      0
+#define DEBUG       1
 #define NOT_SUPPORT 0xFF
 
-#define CLANG 0
-#define CPPLANG 1
+#define CLANG   1
+#define CPPLANG 0
 #define LANG CPPLANG
 
 #define MODE 0x64
@@ -18,7 +18,18 @@
 #if (MODE == 0x86)
     typedef unsigned long  DEFAULT_MODE;
 #endif
+#if (MODE == 0x386)
+    typedef unsigned short DEFAULT_MODE;
+#endif
 
+#if (DEBUG)
+extern "C"{
+    int __get_hardrand_rdrand(void);
+    int __get_hardrand_rdseed(void);
+}
+#endif
+
+#if (LANG == CPPLANG)
 /*
 Generate a random number by hardware using termal entropy and raw entropy.
 
@@ -33,7 +44,6 @@ Usage:
     HardwareRandom r(123456, RDSEED_METHOD); // Creates a random generator with seed 123456 and rdseed method.
     HardwareRandom r; // Creates a random generator with default seed and method (rdrand).
 */
-#if (LANG == CPPLANG)
 template <typename T = DEFAULT_MODE>
 class HardwareRandom{
     private:
@@ -45,15 +55,17 @@ class HardwareRandom{
     HardwareRandom(T seed);
     HardwareRandom(void);
     
-    DEFAULT_MODE random(void);
+    T random(void);
     void update_seed(void); 
-    unsigned long long random64(void);
-    unsigned long random32(void);
+    T random64(void);
+    T random32(void);
 };
 #endif
 
 
-
+/*
+Generates a random number using hardware random method in C language style.
+*/
 #if(LANG == CLANG)
 void update_seed(void);
 DEFAULT_MODE random(void);

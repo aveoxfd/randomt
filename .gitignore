@@ -1,5 +1,6 @@
 /.vscode
 /randh-x86_64.bat
+/start.bat
 /a.exe
 /hdasm.o
 /hdrand.o
