@@ -1,2 +1,7 @@
 /.vscode
 /randh-x86_64.bat
+/a.exe
+/hdasm.o
+/hdrand.o
+/main.o
+/src/main.cpp
