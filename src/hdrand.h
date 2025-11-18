@@ -7,12 +7,16 @@
 #define DEBUG 0
 #define NOT_SUPPORT 0xFF
 
+#define CLANG 0
+#define CPPLANG 1
+#define LANG CPPLANG
+
 #define MODE 0x64
 #if (MODE == 0x64)
-    #define DEFAULT_MODE unsigned long long
+    typedef unsigned long long DEFAULT_MODE;
 #endif
 #if (MODE == 0x86)
-    #define DEFAULT_MODE unsigned long
+    typedef unsigned long  DEFAULT_MODE;
 #endif
 
 /*
@@ -20,23 +24,43 @@ Generate a random number by hardware using termal entropy and raw entropy.
 
 The library only works with the rdrand and rdseed CPU commands.
 If your CPU is younger than the x86 architecture, these commands will not work. 
+Make sure your CPU supports these commands before using this library.
+Usage:
+    #include "hdrand.h"
+    HardwareRandom r; // Creates a random generator with default seed and method (rdrand).
+    HardwareRandom r(123456); // Creates a random generator with seed 123456 and default method (rdrand).
+    HardwareRandom r(123456, RDRAND_METHOD); // Creates a random generator with seed 123456 and rdrand method.
+    HardwareRandom r(123456, RDSEED_METHOD); // Creates a random generator with seed 123456 and rdseed method.
+    HardwareRandom r; // Creates a random generator with default seed and method (rdrand).
 */
+#if (LANG == CPPLANG)
 template <typename T = DEFAULT_MODE>
 class HardwareRandom{
-    public:
-    HardwareRandom(T seed);
-    HardwareRandom(T seed, unsigned char method);
-    HardwareRandom(void);
-    //HardwareRandom(unsigned char method);
+    private:
+    T seed;
+    int(*random_method)(void);
 
+    public:
+    HardwareRandom(T seed, unsigned char method);
+    HardwareRandom(T seed);
+    HardwareRandom(void);
+    
+    DEFAULT_MODE random(void);
+    void update_seed(void); 
     unsigned long long random64(void);
     unsigned long random32(void);
-    DEFAULT_MODE random(void);
-
-    private:
-    int (*random_method)(); 
-    void update_seed(void);
-    T seed;
 };
+#endif
+
+
+
+#if(LANG == CLANG)
+void update_seed(void);
+DEFAULT_MODE random(void);
+unsigned long random32(void);
+unsigned long long random64(void);
+unsigned short random16(void);
+unsigned char random8(void);
+#endif
 
 #endif
