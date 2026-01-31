@@ -1,0 +1,15 @@
+#include "hdrand.h"
+
+template <typename T>
+class Random{
+    private:
+    T seed;
+    rndseed rnd;
+
+    public:
+    Random(rndseed _rnd): rnd(_rnd){};
+    Random(void){};
+    template <typename T>
+    T getrand(void);
+    void setseed(void *_ptr, const int _size);
+};

@@ -72,37 +72,4 @@ RND_API uint8 random8           (rndseed *_sd, const RNDSTNG __rndsetting);
 #ifdef __cplusplus
 }
 #endif
-
-#ifdef __cplusplus
-/*
-Generate a random number by hardware using termal entropy and raw entropy.
-
-The library only works with the rdrand and rdseed CPU commands.
-If your CPU is younger than the x86 architecture, these commands will not work. 
-Make sure your CPU supports these commands before using this library.
-Usage:
-    #include "hdrand.h"
-    HardwareRandom r; // Creates a random generator with default seed and method (rdrand).
-    HardwareRandom r(123456); // Creates a random generator with seed 123456 and default method (rdrand).
-    HardwareRandom r(123456, RDRAND_METHOD); // Creates a random generator with seed 123456 and rdrand method.
-    HardwareRandom r(123456, RDSEED_METHOD); // Creates a random generator with seed 123456 and rdseed method.
-    HardwareRandom r; // Creates a random generator with default seed and method (rdrand).
-*/
-template <typename T = DEFAULT_MODE>
-class HardwareRandom{
-    private:
-    T seed;
-    int(*random_method)(void);
-
-    public:
-    HardwareRandom(T seed, unsigned char method);
-    HardwareRandom(T seed);
-    HardwareRandom(void);
-    
-    T random(void);
-    void update_seed(void); 
-    T random64(void);
-    T random32(void);
-};
-#endif
 #endif
