@@ -28,16 +28,16 @@ typedef signed char                 sint8;
 
 #ifdef RND_STATIC
     #define RND_API
-    #elif defined _WIN32 || defined _WIN64 || defined _CYGWIN__
-        #ifdef RND_BUILD_DLL
-            #define RND_API __declspec(dllexport)
-        #else
-            #define RND_API __declspec(dllimport)
-        #endif
-    #elif defined __GNUC__ && __GNUC__ >= 4
-        #define RND_API __attribute__ ((visibility ("default")))
+#elif defined _WIN32 || defined _WIN64 || defined _CYGWIN__
+    #ifdef RND_BUILD_DLL
+        #define RND_API __declspec(dllexport)
     #else
-        #define RND_API
+        #define RND_API __declspec(dllimport)
+    #endif
+#elif defined __GNUC__ && __GNUC__ >= 4
+    #define RND_API __attribute__ ((visibility ("default")))
+#else
+    #define RND_API
 #endif
 
 #ifdef __WIN32__
